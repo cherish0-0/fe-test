@@ -1,0 +1,13 @@
+FROM node:18 AS development
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+
+ARG UID=1000
+ARG GID=1000
+RUN groupadd -f -g ${GID} growlog && useradd -o -ms /bin/bash -u ${UID} -g growlog growlogmember
+RUN chown -R growlogmember:growlog /app/node_modules
+USER growlogmember
+
+EXPOSE 3000
+CMD ["npm", "start"]
